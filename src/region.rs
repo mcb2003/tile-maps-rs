@@ -9,13 +9,18 @@ pub struct MapRegion<'a, T, M: Map<Tile = T>> {
 }
 
 impl<'a, T, M: Map<Tile = T>> MapRegion<'a, T, M> {
-    pub fn new(map: &'a M, x: usize, y: usize, width: usize, height: usize) -> Self {
-        Self {
+    pub fn new(map: &'a M, x: usize, y: usize, width: usize, height: usize) -> Option<Self> {
+        // Bounds are exclusive
+        if map.in_bounds(x + width - 1, y + height - 1) {
+        Some(Self {
             map,
             top: y,
             left: x,
             width,
             height,
+        })
+        } else {
+            None
         }
     }
 

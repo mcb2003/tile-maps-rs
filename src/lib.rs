@@ -34,7 +34,7 @@ pub trait Map {
         x < self.width() && y < self.height()
     }
 
-    fn region(&self, x: usize, y: usize, width: usize, height: usize) -> MapRegion<Self::Tile, Self>
+    fn region(&self, x: usize, y: usize, width: usize, height: usize) -> Option<MapRegion<Self::Tile, Self>>
     where
         Self: Sized,
     {
