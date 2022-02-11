@@ -22,7 +22,6 @@ pub trait Map {
     where
         Self::Tile: Copy;
     fn get_ref(&self, x: usize, y: usize) -> Option<&Self::Tile>;
-    fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile>;
 
     fn width(&self) -> usize;
     fn height(&self) -> usize;
@@ -35,18 +34,26 @@ pub trait Map {
         x < self.width() && y < self.height()
     }
 
-fn region(&self, x: usize, y: usize, width: usize, height: usize) -> MapRegion<Self::Tile, Self>
-where
-Self: Sized {
-    MapRegion::new(self, x, y, width, height)
+    fn region(&self, x: usize, y: usize, width: usize, height: usize) -> MapRegion<Self::Tile, Self>
+    where
+        Self: Sized,
+    {
+        MapRegion::new(self, x, y, width, height)
+    }
 }
+
+pub trait MapMut: Map {
+    fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile>;
 }
 
 pub trait MapRows: Map {
     fn row(&self, row: usize) -> Option<&[Self::Tile]>;
-    fn row_mut(&mut self, row: usize) -> Option<&mut [Self::Tile]>;
     #[cfg(feature = "alloc")]
     fn rows(&self) -> Box<dyn DoubleEndedIterator<Item = &[Self::Tile]> + '_>;
+}
+
+pub trait MapRowsMut: MapRows {
+    fn row_mut(&mut self, row: usize) -> Option<&mut [Self::Tile]>;
     #[cfg(feature = "alloc")]
     fn rows_mut(&mut self) -> Box<dyn DoubleEndedIterator<Item = &mut [Self::Tile]> + '_>;
 }

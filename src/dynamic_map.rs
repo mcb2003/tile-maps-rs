@@ -1,7 +1,7 @@
 #[cfg(feature = "alloc")]
 use alloc::{boxed::Box, vec, vec::Vec};
 
-use super::{Map, MapRows};
+use super::{Map, MapMut, MapRows, MapRowsMut};
 
 #[derive(Clone)]
 pub struct DynamicMap<T> {
@@ -47,10 +47,6 @@ impl<T> Map for DynamicMap<T> {
         self.tiles.get(x + y * self.width)
     }
 
-    fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile> {
-        self.tiles.get_mut(x + y * self.width)
-    }
-
     fn width(&self) -> usize {
         self.width
     }
@@ -60,18 +56,26 @@ impl<T> Map for DynamicMap<T> {
     }
 }
 
+impl<T> MapMut for DynamicMap<T> {
+    fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile> {
+        self.tiles.get_mut(x + y * self.width)
+    }
+}
+
 impl<T> MapRows for DynamicMap<T> {
     fn row(&self, row: usize) -> Option<&[Self::Tile]> {
         self.tiles.get(row * self.width..(row + 1) * self.width)
     }
 
-    fn row_mut(&mut self, row: usize) -> Option<&mut [Self::Tile]> {
-        self.tiles.get_mut(row * self.width..(row + 1) * self.width)
-    }
-
     #[cfg(feature = "alloc")]
     fn rows(&self) -> Box<dyn DoubleEndedIterator<Item = &[Self::Tile]> + '_> {
         Box::new(self.tiles.chunks(self.width))
+    }
+}
+
+impl<T> MapRowsMut for DynamicMap<T> {
+    fn row_mut(&mut self, row: usize) -> Option<&mut [Self::Tile]> {
+        self.tiles.get_mut(row * self.width..(row + 1) * self.width)
     }
 
     #[cfg(feature = "alloc")]

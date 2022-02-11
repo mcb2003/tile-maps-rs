@@ -9,20 +9,26 @@ pub struct MapRegion<'a, T, M: Map<Tile = T>> {
 }
 
 impl<'a, T, M: Map<Tile = T>> MapRegion<'a, T, M> {
-    pub fn new(map: &'a M,x: usize, y: usize, width: usize, height: usize) -> Self {
-        Self { map, top: y, left: x, width, height }
+    pub fn new(map: &'a M, x: usize, y: usize, width: usize, height: usize) -> Self {
+        Self {
+            map,
+            top: y,
+            left: x,
+            width,
+            height,
+        }
     }
 
-pub fn map(&self) -> &M {
-    self.map
-}
+    pub fn map(&self) -> &M {
+        self.map
+    }
 
     pub fn top(&self) -> usize {
-    self.top
+        self.top
     }
 
     pub fn left(&self) -> usize {
-    self.left
+        self.left
     }
 
     pub fn bottom(&self) -> usize {
