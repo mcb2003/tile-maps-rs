@@ -1,4 +1,7 @@
-use super::Map;
+#[cfg(feature = "alloc")]
+use alloc::boxed::Box;
+
+use super::{Map, MapRows};
 
 pub struct MapRegion<'a, T, M: Map<Tile = T>> {
     map: &'a M,
@@ -72,5 +75,17 @@ impl<'a, T, M: Map<Tile = T>> Map for MapRegion<'a, T, M> {
 
     fn height(&self) -> usize {
         self.height
+    }
+}
+
+impl<'a, T, M: MapRows<Tile = T>> MapRows for MapRegion<'a, T, M> {
+    fn row(&self, row: usize) -> Option<&[Self::Tile]> {
+        self.map.row(row).and_then(|r| r.get(self.left()..self.right()))
+    }
+
+    #[cfg(feature = "alloc")]
+    fn rows(&self) -> Box<dyn DoubleEndedIterator<Item = &[Self::Tile]> + '_> {
+        // Todo: Find a way to not allocate another Box?
+        Box::new(self.map.rows().map(|r| &r[self.left()..self.right()]))
     }
 }

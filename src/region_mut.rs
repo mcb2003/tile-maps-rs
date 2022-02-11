@@ -1,4 +1,7 @@
-use super::{Map, MapMut};
+#[cfg(feature = "alloc")]
+use alloc::boxed::Box;
+
+use super::{Map, MapMut, MapRows, MapRowsMut};
 
 pub struct MapRegionMut<'a, T, M: Map<Tile = T>> {
     map: &'a mut M,
@@ -86,5 +89,31 @@ impl<'a, T, M: MapMut<Tile = T>> MapMut for MapRegionMut<'a, T, M> {
         } else {
             None
         }
+    }
+}
+
+impl<'a, T, M: MapRows<Tile = T>> MapRows for MapRegionMut<'a, T, M> {
+    fn row(&self, row: usize) -> Option<&[Self::Tile]> {
+        self.map.row(row).and_then(|r| r.get(self.left()..self.right()))
+    }
+
+    #[cfg(feature = "alloc")]
+    fn rows(&self) -> Box<dyn DoubleEndedIterator<Item = &[Self::Tile]> + '_> {
+        // Todo: Find a way to not allocate another Box?
+        Box::new(self.map.rows().map(|r| &r[self.left()..self.right()]))
+    }
+}
+
+impl<'a, T, M: MapRowsMut<Tile = T>> MapRowsMut for MapRegionMut<'a, T, M> {
+    fn row_mut(&mut self, row: usize) -> Option<&mut [Self::Tile]> {
+        let left = self.left();
+        let right = self.right();
+        self.map.row_mut(row).and_then(|r| r.get_mut(left..right))
+    }
+
+    #[cfg(feature = "alloc")]
+    fn rows_mut(&mut self) -> Box<dyn DoubleEndedIterator<Item = &mut [Self::Tile]> + '_> {
+        // Todo: Find a way to not allocate another Box?
+        Box::new(self.map.rows_mut().map(|r| &mut r[self.left..][..self.width]))
     }
 }
