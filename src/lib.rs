@@ -9,6 +9,8 @@ pub use static_map::StaticMap;
 mod dynamic_map;
 #[cfg(feature = "alloc")]
 pub use dynamic_map::DynamicMap;
+mod region;
+pub use region::MapRegion;
 
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
@@ -32,6 +34,12 @@ pub trait Map {
     fn in_bounds(&self, x: usize, y: usize) -> bool {
         x < self.width() && y < self.height()
     }
+
+fn region(&self, x: usize, y: usize, width: usize, height: usize) -> MapRegion<Self::Tile, Self>
+where
+Self: Sized {
+    MapRegion::new(self, x, y, width, height)
+}
 }
 
 pub trait MapRows: Map {
