@@ -39,3 +39,33 @@ impl<'a, T, M: Map<Tile = T>> MapRegion<'a, T, M> {
         self.left + self.width
     }
 }
+
+impl<'a, T, M: Map<Tile = T>> Map for MapRegion<'a, T, M> {
+    type Tile = T;
+
+    fn get(&self, x: usize, y: usize) -> Option<Self::Tile>
+    where
+    Self::Tile: Copy {
+        if self.in_bounds(x, y) {
+            self.map.get(self.left + x, self.top + y)
+        } else {
+            None
+        }
+    }
+
+    fn get_ref(&self, x: usize, y: usize) -> Option<&Self::Tile> {
+        if self.in_bounds(x, y) {
+            self.map.get_ref(self.left + x, self.top + y)
+        } else {
+            None
+        }
+    }
+
+    fn width(&self) -> usize {
+        self.width
+    }
+
+    fn height(&self) -> usize {
+        self.height
+    }
+}
