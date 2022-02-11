@@ -3,7 +3,7 @@ use super::Map;
 #[derive(Clone)]
 pub struct DynamicMap<T> {
     tiles: Vec<T>,
-    width: usize
+    width: usize,
 }
 
 impl<T> DynamicMap<T> {
@@ -23,9 +23,12 @@ impl<T> DynamicMap<T> {
 
     pub fn with_default(width: usize, height: usize) -> Self
     where
-    T: Default {
+        T: Default,
+    {
         Self {
-        tiles: std::iter::repeat_with(|| T::default()).take(width * height).collect(),
+            tiles: std::iter::repeat_with(|| T::default())
+                .take(width * height)
+                .collect(),
             width,
         }
     }
@@ -35,18 +38,19 @@ impl<T> Map for DynamicMap<T> {
     type Tile = T;
 
     fn get(&self, x: usize, y: usize) -> Option<Self::Tile>
-        where
-            Self::Tile: Copy {
-                self.tiles.get(x + y * self.width).copied()
-            }
+    where
+        Self::Tile: Copy,
+    {
+        self.tiles.get(x + y * self.width).copied()
+    }
 
     fn get_ref(&self, x: usize, y: usize) -> Option<&Self::Tile> {
-                self.tiles.get(x + y * self.width)
-            }
+        self.tiles.get(x + y * self.width)
+    }
 
     fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile> {
-                self.tiles.get_mut(x + y * self.width)
-            }
+        self.tiles.get_mut(x + y * self.width)
+    }
 
     fn width(&self) -> usize {
         self.width
@@ -56,4 +60,3 @@ impl<T> Map for DynamicMap<T> {
         self.tiles.len() / self.width
     }
 }
-

@@ -5,10 +5,10 @@ pub use dynamic_map::DynamicMap;
 
 pub trait Map {
     type Tile;
-    
+
     fn get(&self, x: usize, y: usize) -> Option<Self::Tile>
-        where
-            Self::Tile: Copy;
+    where
+        Self::Tile: Copy;
     fn get_ref(&self, x: usize, y: usize) -> Option<&Self::Tile>;
     fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile>;
 
