@@ -1,6 +1,9 @@
 [package]
 name = "tiles"
 version = "0.1.0"
+authors = ["Michael Connor Buchan <mikey@blindcomputing.org>"]
+license = "mit"
+description = "Helpers for working with 2D maps of tiles common in games"
 edition = "2021"
 
 [features]
