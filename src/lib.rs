@@ -61,13 +61,16 @@ pub trait MapMut: Map {
         self.replace(x, y, Self::Tile::default())
     }
     
-    fn set(&mut self, x: usize, y: usize, new: Self::Tile) {
+    fn set(&mut self, x: usize, y: usize, new: Self::Tile) -> bool {
         if let Some(tile) = self.get_mut(x, y) {
             *tile = new;
+            true
+        } else {
+            false
         }
     }
     
-    fn set_default(&mut self, x: usize, y: usize)
+    fn set_default(&mut self, x: usize, y: usize) -> bool
     where
     Self::Tile: Default {
         self.set(x, y, Self::Tile::default())
@@ -78,7 +81,7 @@ fn clear(&mut self)
         Self::Tile: Default {
     for y in 0..self.height() {
     for x in 0..self.width() {
-        self.set_default(x, y)
+        self.set_default(x, y);
     }
     }
 }
@@ -90,7 +93,7 @@ fn clear_to(&mut self, new: Self::Tile)
             // generic way?
     for y in 0..self.height() {
     for x in 0..self.width() {
-        self.set(x, y, new.clone())
+        self.set(x, y, new.clone());
     }
     }
 }
