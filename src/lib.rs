@@ -47,6 +47,32 @@ pub trait Map {
 pub trait MapMut: Map {
     fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile>;
 
+    fn replace(&mut self, x: usize, y: usize, new: Self::Tile) -> Result<Self::Tile, Self::Tile> {
+        if let Some(tile) = self.get_mut(x, y) {
+            Ok(core::mem::replace(tile, new))
+        } else {
+            Err(new)
+        }
+    }
+
+    fn replace_default(&mut self, x: usize, y: usize) -> Result<Self::Tile, Self::Tile>
+    where
+    Self::Tile: Default {
+        self.replace(x, y, Self::Tile::default())
+    }
+    
+    fn set(&mut self, x: usize, y: usize, new: Self::Tile) {
+        if let Some(tile) = self.get_mut(x, y) {
+            *tile = new;
+        }
+    }
+    
+    fn set_default(&mut self, x: usize, y: usize)
+    where
+    Self::Tile: Default {
+        self.set(x, y, Self::Tile::default())
+    }
+
     fn region_mut(&mut self, x: usize, y: usize, width: usize, height: usize) -> Option<MapRegionMut<Self::Tile, Self>>
     where
         Self: Sized,
