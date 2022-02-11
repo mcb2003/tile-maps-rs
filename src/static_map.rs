@@ -64,6 +64,24 @@ impl<T, const WIDTH: usize, const HEIGHT: usize> MapMut for StaticMap<T, WIDTH, 
     fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile> {
         self.tiles.get_mut(y).and_then(|row| row.get_mut(x))
     }
+
+fn clear(&mut self)
+    where
+        Self::Tile: Default {
+            for tile in self.tiles.iter_mut().flat_map(|r| r.iter_mut()) {
+                *tile = Self::Tile::default();
+            }
+}
+
+fn clear_to(&mut self, new: Self::Tile)
+    where
+        Self::Tile: Clone {
+            // Todo: Any performant way to prevent the extraneous clone for the last element in a
+            // generic way?
+            for tile in self.tiles.iter_mut().flat_map(|r| r.iter_mut()) {
+        *tile = new.clone();
+    }
+}
 }
 
 impl<T, const WIDTH: usize, const HEIGHT: usize> MapRows for StaticMap<T, WIDTH, HEIGHT> {
