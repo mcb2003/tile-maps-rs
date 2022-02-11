@@ -1,6 +1,7 @@
-use super::Map;
+#[cfg(feature = "alloc")]
+use alloc::{boxed::Box, vec::Vec};
 
-use alloc::vec::Vec;
+use super::{Map, MapRows};
 
 #[derive(Clone)]
 pub struct DynamicMap<T> {
@@ -60,5 +61,25 @@ impl<T> Map for DynamicMap<T> {
 
     fn height(&self) -> usize {
         self.tiles.len() / self.width
+    }
+}
+
+impl<T> MapRows for DynamicMap<T> {
+    fn row(&self, row: usize) -> Option<&[Self::Tile]> {
+        self.tiles.get(row * self.width..(row + 1) * self.width)
+    }
+
+    fn row_mut(&mut self, row: usize) -> Option<&mut [Self::Tile]> {
+        self.tiles.get_mut(row * self.width..(row + 1) * self.width)
+    }
+
+#[cfg(feature = "alloc")]
+    fn rows(&self) -> Box<dyn DoubleEndedIterator<Item = &[Self::Tile]> + '_> {
+        Box::new(self.tiles.chunks(self.width))
+    }
+
+#[cfg(feature = "alloc")]
+    fn rows_mut(&mut self) -> Box<dyn DoubleEndedIterator<Item = &mut [Self::Tile]> + '_> {
+        Box::new(self.tiles.chunks_mut(self.width))
     }
 }

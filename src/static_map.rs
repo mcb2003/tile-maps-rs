@@ -1,4 +1,7 @@
-use super::Map;
+#[cfg(feature = "alloc")]
+use alloc::boxed::Box;
+
+use super::{Map, MapRows};
 
 #[derive(Clone)]
 pub struct StaticMap<T, const WIDTH: usize, const HEIGHT: usize> {
@@ -58,5 +61,25 @@ impl<T, const WIDTH: usize, const HEIGHT: usize> Map for StaticMap<T, WIDTH, HEI
 
     fn height(&self) -> usize {
         HEIGHT
+    }
+}
+
+impl<T, const WIDTH: usize, const HEIGHT: usize> MapRows for StaticMap<T, WIDTH, HEIGHT> {
+    fn row(&self, row: usize) -> Option<&[Self::Tile]> {
+        self.tiles.get(row).map(|r| r.as_slice())
+    }
+
+    fn row_mut(&mut self, row: usize) -> Option<&mut [Self::Tile]> {
+        self.tiles.get_mut(row).map(|r| r.as_mut_slice())
+    }
+
+    #[cfg(feature = "alloc")]
+    fn rows(&self) -> Box<dyn DoubleEndedIterator<Item = &[Self::Tile]> + '_> {
+        Box::new(self.tiles.iter().map(|r| r.as_slice()))
+    }
+
+    #[cfg(feature = "alloc")]
+    fn rows_mut(&mut self) -> Box<dyn DoubleEndedIterator<Item = &mut [Self::Tile]> + '_> {
+        Box::new(self.tiles.iter_mut().map(|r| r.as_mut_slice()))
     }
 }
