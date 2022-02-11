@@ -1,6 +1,13 @@
+#![no_std]
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
 mod static_map;
 pub use static_map::StaticMap;
+#[cfg(feature = "alloc")]
 mod dynamic_map;
+#[cfg(feature = "alloc")]
 pub use dynamic_map::DynamicMap;
 
 pub trait Map {

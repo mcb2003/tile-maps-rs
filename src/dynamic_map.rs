@@ -1,5 +1,7 @@
 use super::Map;
 
+use alloc::vec::Vec;
+
 #[derive(Clone)]
 pub struct DynamicMap<T> {
     tiles: Vec<T>,
@@ -26,7 +28,7 @@ impl<T> DynamicMap<T> {
         T: Default,
     {
         Self {
-            tiles: std::iter::repeat_with(|| T::default())
+            tiles: core::iter::repeat_with(|| T::default())
                 .take(width * height)
                 .collect(),
             width,
