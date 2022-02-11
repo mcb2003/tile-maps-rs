@@ -1,7 +1,7 @@
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 
-use super::{Map, MapRows};
+use crate::{Map, MapRows};
 
 pub struct MapRegion<'a, T, M: Map<Tile = T>> {
     map: &'a M,
@@ -15,13 +15,13 @@ impl<'a, T, M: Map<Tile = T>> MapRegion<'a, T, M> {
     pub fn new(map: &'a M, x: usize, y: usize, width: usize, height: usize) -> Option<Self> {
         // Bounds are exclusive
         if map.in_bounds(x + width - 1, y + height - 1) {
-        Some(Self {
-            map,
-            top: y,
-            left: x,
-            width,
-            height,
-        })
+            Some(Self {
+                map,
+                top: y,
+                left: x,
+                width,
+                height,
+            })
         } else {
             None
         }
@@ -53,7 +53,8 @@ impl<'a, T, M: Map<Tile = T>> Map for MapRegion<'a, T, M> {
 
     fn get(&self, x: usize, y: usize) -> Option<Self::Tile>
     where
-    Self::Tile: Copy {
+        Self::Tile: Copy,
+    {
         if self.in_bounds(x, y) {
             self.map.get(self.left + x, self.top + y)
         } else {
@@ -80,7 +81,9 @@ impl<'a, T, M: Map<Tile = T>> Map for MapRegion<'a, T, M> {
 
 impl<'a, T, M: MapRows<Tile = T>> MapRows for MapRegion<'a, T, M> {
     fn row(&self, row: usize) -> Option<&[Self::Tile]> {
-        self.map.row(row).and_then(|r| r.get(self.left()..self.right()))
+        self.map
+            .row(row)
+            .and_then(|r| r.get(self.left()..self.right()))
     }
 
     #[cfg(feature = "alloc")]

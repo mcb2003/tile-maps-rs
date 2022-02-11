@@ -9,10 +9,8 @@ pub use static_map::StaticMap;
 mod dynamic_map;
 #[cfg(feature = "alloc")]
 pub use dynamic_map::DynamicMap;
-mod region;
-pub use region::MapRegion;
-mod region_mut;
-pub use region_mut::MapRegionMut;
+pub mod region;
+pub use region::{MapRegion, MapRegionMut};
 
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
@@ -36,7 +34,13 @@ pub trait Map {
         x < self.width() && y < self.height()
     }
 
-    fn region(&self, x: usize, y: usize, width: usize, height: usize) -> Option<MapRegion<Self::Tile, Self>>
+    fn region(
+        &self,
+        x: usize,
+        y: usize,
+        width: usize,
+        height: usize,
+    ) -> Option<MapRegion<Self::Tile, Self>>
     where
         Self: Sized,
     {
@@ -57,10 +61,11 @@ pub trait MapMut: Map {
 
     fn replace_default(&mut self, x: usize, y: usize) -> Result<Self::Tile, Self::Tile>
     where
-    Self::Tile: Default {
+        Self::Tile: Default,
+    {
         self.replace(x, y, Self::Tile::default())
     }
-    
+
     fn set(&mut self, x: usize, y: usize, new: Self::Tile) -> bool {
         if let Some(tile) = self.get_mut(x, y) {
             *tile = new;
@@ -69,36 +74,45 @@ pub trait MapMut: Map {
             false
         }
     }
-    
+
     fn set_default(&mut self, x: usize, y: usize) -> bool
     where
-    Self::Tile: Default {
+        Self::Tile: Default,
+    {
         self.set(x, y, Self::Tile::default())
     }
 
-fn clear(&mut self)
+    fn clear(&mut self)
     where
-        Self::Tile: Default {
-    for y in 0..self.height() {
-    for x in 0..self.width() {
-        self.set_default(x, y);
+        Self::Tile: Default,
+    {
+        for y in 0..self.height() {
+            for x in 0..self.width() {
+                self.set_default(x, y);
+            }
+        }
     }
-    }
-}
 
-fn clear_to(&mut self, new: Self::Tile)
+    fn clear_to(&mut self, new: Self::Tile)
     where
-        Self::Tile: Clone {
-            // Todo: Any performant way to prevent the extraneous clone for the last element in a
-            // generic way?
-    for y in 0..self.height() {
-    for x in 0..self.width() {
-        self.set(x, y, new.clone());
+        Self::Tile: Clone,
+    {
+        // Todo: Any performant way to prevent the extraneous clone for the last element in a
+        // generic way?
+        for y in 0..self.height() {
+            for x in 0..self.width() {
+                self.set(x, y, new.clone());
+            }
+        }
     }
-    }
-}
 
-    fn region_mut(&mut self, x: usize, y: usize, width: usize, height: usize) -> Option<MapRegionMut<Self::Tile, Self>>
+    fn region_mut(
+        &mut self,
+        x: usize,
+        y: usize,
+        width: usize,
+        height: usize,
+    ) -> Option<MapRegionMut<Self::Tile, Self>>
     where
         Self: Sized,
     {

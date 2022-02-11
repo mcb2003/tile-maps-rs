@@ -1,7 +1,7 @@
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 
-use super::{Map, MapMut, MapRows, MapRowsMut};
+use crate::{Map, MapMut, MapRows, MapRowsMut};
 
 pub struct MapRegionMut<'a, T, M: Map<Tile = T>> {
     map: &'a mut M,
@@ -15,13 +15,13 @@ impl<'a, T, M: Map<Tile = T>> MapRegionMut<'a, T, M> {
     pub fn new(map: &'a mut M, x: usize, y: usize, width: usize, height: usize) -> Option<Self> {
         // Bounds are exclusive
         if map.in_bounds(x + width - 1, y + height - 1) {
-        Some(Self {
-            map,
-            top: y,
-            left: x,
-            width,
-            height,
-        })
+            Some(Self {
+                map,
+                top: y,
+                left: x,
+                width,
+                height,
+            })
         } else {
             None
         }
@@ -57,7 +57,8 @@ impl<'a, T, M: Map<Tile = T>> Map for MapRegionMut<'a, T, M> {
 
     fn get(&self, x: usize, y: usize) -> Option<Self::Tile>
     where
-    Self::Tile: Copy {
+        Self::Tile: Copy,
+    {
         if self.in_bounds(x, y) {
             self.map.get(self.left + x, self.top + y)
         } else {
@@ -94,7 +95,9 @@ impl<'a, T, M: MapMut<Tile = T>> MapMut for MapRegionMut<'a, T, M> {
 
 impl<'a, T, M: MapRows<Tile = T>> MapRows for MapRegionMut<'a, T, M> {
     fn row(&self, row: usize) -> Option<&[Self::Tile]> {
-        self.map.row(row).and_then(|r| r.get(self.left()..self.right()))
+        self.map
+            .row(row)
+            .and_then(|r| r.get(self.left()..self.right()))
     }
 
     #[cfg(feature = "alloc")]
@@ -114,6 +117,10 @@ impl<'a, T, M: MapRowsMut<Tile = T>> MapRowsMut for MapRegionMut<'a, T, M> {
     #[cfg(feature = "alloc")]
     fn rows_mut(&mut self) -> Box<dyn DoubleEndedIterator<Item = &mut [Self::Tile]> + '_> {
         // Todo: Find a way to not allocate another Box?
-        Box::new(self.map.rows_mut().map(|r| &mut r[self.left..][..self.width]))
+        Box::new(
+            self.map
+                .rows_mut()
+                .map(|r| &mut r[self.left..][..self.width]),
+        )
     }
 }
