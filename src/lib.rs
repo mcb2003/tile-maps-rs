@@ -11,6 +11,8 @@ mod dynamic_map;
 pub use dynamic_map::DynamicMap;
 mod region;
 pub use region::MapRegion;
+mod region_mut;
+pub use region_mut::MapRegionMut;
 
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
@@ -44,6 +46,13 @@ pub trait Map {
 
 pub trait MapMut: Map {
     fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile>;
+
+    fn region_mut(&mut self, x: usize, y: usize, width: usize, height: usize) -> Option<MapRegionMut<Self::Tile, Self>>
+    where
+        Self: Sized,
+    {
+        MapRegionMut::new(self, x, y, width, height)
+    }
 }
 
 pub trait MapRows: Map {
