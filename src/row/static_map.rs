@@ -1,7 +1,8 @@
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 
-use super::{Map, MapMut, MapRows, MapRowsMut};
+use crate::{Map, MapMut};
+use super::{MapRows, MapRowsMut};
 
 #[derive(Clone)]
 pub struct StaticMap<T, const WIDTH: usize, const HEIGHT: usize> {
@@ -65,23 +66,25 @@ impl<T, const WIDTH: usize, const HEIGHT: usize> MapMut for StaticMap<T, WIDTH, 
         self.tiles.get_mut(y).and_then(|row| row.get_mut(x))
     }
 
-fn clear(&mut self)
+    fn clear(&mut self)
     where
-        Self::Tile: Default {
-            for tile in self.tiles.iter_mut().flat_map(|r| r.iter_mut()) {
-                *tile = Self::Tile::default();
-            }
-}
-
-fn clear_to(&mut self, new: Self::Tile)
-    where
-        Self::Tile: Clone {
-            // Todo: Any performant way to prevent the extraneous clone for the last element in a
-            // generic way?
-            for tile in self.tiles.iter_mut().flat_map(|r| r.iter_mut()) {
-        *tile = new.clone();
+        Self::Tile: Default,
+    {
+        for tile in self.tiles.iter_mut().flat_map(|r| r.iter_mut()) {
+            *tile = Self::Tile::default();
+        }
     }
-}
+
+    fn clear_to(&mut self, new: Self::Tile)
+    where
+        Self::Tile: Clone,
+    {
+        // Todo: Any performant way to prevent the extraneous clone for the last element in a
+        // generic way?
+        for tile in self.tiles.iter_mut().flat_map(|r| r.iter_mut()) {
+            *tile = new.clone();
+        }
+    }
 }
 
 impl<T, const WIDTH: usize, const HEIGHT: usize> MapRows for StaticMap<T, WIDTH, HEIGHT> {

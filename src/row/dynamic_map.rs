@@ -1,7 +1,8 @@
 #[cfg(feature = "alloc")]
 use alloc::{boxed::Box, vec, vec::Vec};
 
-use super::{Map, MapMut, MapRows, MapRowsMut};
+use crate::{Map, MapMut};
+use super::{MapRows, MapRowsMut};
 
 #[derive(Clone)]
 pub struct DynamicMap<T> {
@@ -61,23 +62,25 @@ impl<T> MapMut for DynamicMap<T> {
         self.tiles.get_mut(x + y * self.width)
     }
 
-fn clear(&mut self)
+    fn clear(&mut self)
     where
-        Self::Tile: Default {
-            for tile in self.tiles.iter_mut() {
-                *tile = Self::Tile::default();
-            }
-}
-
-fn clear_to(&mut self, new: Self::Tile)
-    where
-        Self::Tile: Clone {
-            // Todo: Any performant way to prevent the extraneous clone for the last element in a
-            // generic way?
-            for tile in self.tiles.iter_mut() {
-        *tile = new.clone();
+        Self::Tile: Default,
+    {
+        for tile in self.tiles.iter_mut() {
+            *tile = Self::Tile::default();
+        }
     }
-}
+
+    fn clear_to(&mut self, new: Self::Tile)
+    where
+        Self::Tile: Clone,
+    {
+        // Todo: Any performant way to prevent the extraneous clone for the last element in a
+        // generic way?
+        for tile in self.tiles.iter_mut() {
+            *tile = new.clone();
+        }
+    }
 }
 
 impl<T> MapRows for DynamicMap<T> {

@@ -1,7 +1,7 @@
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 
-use crate::{Map, MapRows};
+use crate::{Map, row::MapRows};
 
 pub struct MapRegion<'a, T, M: Map<Tile = T>> {
     map: &'a M,
