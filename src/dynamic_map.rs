@@ -1,5 +1,5 @@
 #[cfg(feature = "alloc")]
-use alloc::{boxed::Box, vec::Vec};
+use alloc::{boxed::Box, vec, vec::Vec};
 
 use super::{Map, MapRows};
 
@@ -10,21 +10,7 @@ pub struct DynamicMap<T> {
 }
 
 impl<T> DynamicMap<T> {
-    pub fn new(width: usize) -> Self {
-        Self {
-            tiles: Vec::new(),
-            width,
-        }
-    }
-
-    pub fn with_capacity(width: usize, height: usize) -> Self {
-        Self {
-            tiles: Vec::with_capacity(width * height),
-            width,
-        }
-    }
-
-    pub fn with_default(width: usize, height: usize) -> Self
+    pub fn new(width: usize, height: usize) -> Self
     where
         T: Default,
     {
@@ -32,6 +18,16 @@ impl<T> DynamicMap<T> {
             tiles: core::iter::repeat_with(|| T::default())
                 .take(width * height)
                 .collect(),
+            width,
+        }
+    }
+
+    pub fn default_copy(width: usize, height: usize) -> Self
+    where
+        T: Copy + Default,
+    {
+        Self {
+            tiles: vec![T::default(); width * height],
             width,
         }
     }
@@ -73,12 +69,12 @@ impl<T> MapRows for DynamicMap<T> {
         self.tiles.get_mut(row * self.width..(row + 1) * self.width)
     }
 
-#[cfg(feature = "alloc")]
+    #[cfg(feature = "alloc")]
     fn rows(&self) -> Box<dyn DoubleEndedIterator<Item = &[Self::Tile]> + '_> {
         Box::new(self.tiles.chunks(self.width))
     }
 
-#[cfg(feature = "alloc")]
+    #[cfg(feature = "alloc")]
     fn rows_mut(&mut self) -> Box<dyn DoubleEndedIterator<Item = &mut [Self::Tile]> + '_> {
         Box::new(self.tiles.chunks_mut(self.width))
     }
