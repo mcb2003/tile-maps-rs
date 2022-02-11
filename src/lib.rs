@@ -66,3 +66,7 @@ pub trait MapRowsMut: MapRows {
     #[cfg(feature = "alloc")]
     fn rows_mut(&mut self) -> Box<dyn DoubleEndedIterator<Item = &mut [Self::Tile]> + '_>;
 }
+
+pub mod prelude {
+    pub use super::{Map, MapMut, MapRows, MapRowsMut};
+}
