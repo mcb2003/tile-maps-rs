@@ -33,7 +33,7 @@ where
     /// Create a new `StaticMap`. Each tile will be initialised to the default tile.
     /// # Example
     /// ```
-    /// # use tiles::{row::StaticMap, prelude::*};
+    /// # use tile_maps::{row::StaticMap, prelude::*};
     /// let map = StaticMap::<i32, 5, 4>::new();
     /// assert_eq!(map.width(), 5);
     /// assert_eq!(map.height(), 4);

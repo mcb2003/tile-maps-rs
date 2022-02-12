@@ -1,5 +1,5 @@
 [package]
-name = "tiles"
+name = "tile-maps"
 version = "0.1.0"
 authors = ["Michael Connor Buchan <mikey@blindcomputing.org>"]
 license = "mit"

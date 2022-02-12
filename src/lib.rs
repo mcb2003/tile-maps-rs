@@ -10,6 +10,7 @@
 //! * [ ] Maps stored as a graph, for easier path-finding
 //! * [ ] Maps that store tiles in column-major order
 //! * [ ] Maps composed of chunks
+//! * [ ] Implement [`Index`][core::ops::Index] and [`IndexMut`][core::ops::IndexMut] for map types.
 //! ## Questions
 //! * When borrowing a region of a region, should we borrow from the root, parent map, or from the
 //! first region?

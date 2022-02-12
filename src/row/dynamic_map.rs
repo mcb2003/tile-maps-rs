@@ -17,7 +17,7 @@ impl<T> DynamicMap<T> {
     /// Create a new `DynamicMap`. Each tile will be initialised to the default tile.
     /// # Example
     /// ```
-    /// # use tiles::{row::DynamicMap, prelude::*};
+    /// # use tile_maps::{row::DynamicMap, prelude::*};
     /// let map = DynamicMap::<i32>::new(5, 4);
     /// assert_eq!(map.width(), 5);
     /// assert_eq!(map.height(), 4);

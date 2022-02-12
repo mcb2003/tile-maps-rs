@@ -22,7 +22,7 @@ impl<'a, T, M: Map<Tile = T>> MapRegionMut<'a, T, M> {
     /// Returns [`None`] if any of the coordinates are out of bounds.
     /// # Example
     /// ```
-    /// use tiles::{row::DynamicMap, region::MapRegionMut, prelude::*};
+    /// use tile_maps::{row::DynamicMap, region::MapRegionMut, prelude::*};
     ///
     /// let mut map = DynamicMap::<i32>::new(10, 10);
     /// let mut region = MapRegionMut::new(&mut map, 1, 2, 4, 3).expect("Coordinates out of bounds");
