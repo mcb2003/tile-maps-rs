@@ -1,4 +1,23 @@
 //! Helpers for working with 2D maps of tiles common in games.
+//! ## Features
+//! * [x] Convenient API to get and set tiles
+//! * [x] Use any type that implements [`Default`] as a tile
+//! * [x] stack-allocated, fixed-size maps with [`StaticMap`][row::StaticMap].
+//! * [x] heap-allocated, dynamic maps with [`DynamicMap`][row::DynamicMap].
+//! * [x] Borrow, mutably or immutably, [regions][region] of maps
+//! ## Goals
+//! * [ ] Resizable maps
+//! * [ ] Maps stored as a graph, for easier path-finding
+//! * [ ] Maps that store tiles in column-major order
+//! * [ ] Maps composed of chunks
+//! ## Questions
+//! * When borrowing a region of a region, should we borrow from the root, parent map, or from the
+//! first region?
+//! * Can we implement [`MapRows::rows`][row::MapRows::rows()] and
+//! [`MapRowsMut::rows_mut`][row::MapRowsMut::rows_mut()] wihtout adding another layer of dynamic
+//! dispatch to the iterator?
+//! * Is there any benefit, even from an API standpoint, in creating maps with interior mutability,
+//! or locking?
 
 #![no_std]
 #![warn(missing_docs)]
