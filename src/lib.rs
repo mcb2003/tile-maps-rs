@@ -19,6 +19,10 @@
 //! dispatch to the iterator?
 //! * Is there any benefit, even from an API standpoint, in creating maps with interior mutability,
 //! or locking?
+//! ## No STD
+//! This crate doesn't rely on the Rust standard library. However, by default, it does rely on
+//! [`alloc`] for types that allocate, like [`DynamicMap`][row::DynamicMap]. Disabling the "alloc"
+//! Cargo feature will relax this requirement, and remove any types that allocate.
 
 #![no_std]
 #![warn(missing_docs)]
