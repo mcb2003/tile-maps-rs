@@ -42,11 +42,19 @@ impl<T> Map for DynamicMap<T> {
     where
         Self::Tile: Copy,
     {
-        self.tiles.get(x + y * self.width).copied()
+        if x < self.width {
+            self.tiles.get(x + y * self.width).copied()
+        } else {
+            None
+        }
     }
 
     fn get_ref(&self, x: usize, y: usize) -> Option<&Self::Tile> {
-        self.tiles.get(x + y * self.width)
+        if x < self.width {
+            self.tiles.get(x + y * self.width)
+        } else {
+            None
+        }
     }
 
     fn width(&self) -> usize {
@@ -60,7 +68,11 @@ impl<T> Map for DynamicMap<T> {
 
 impl<T> MapMut for DynamicMap<T> {
     fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut Self::Tile> {
-        self.tiles.get_mut(x + y * self.width)
+        if x < self.width {
+            self.tiles.get_mut(x + y * self.width)
+        } else {
+            None
+        }
     }
 
     fn clear(&mut self)
