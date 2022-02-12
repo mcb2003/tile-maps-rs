@@ -6,8 +6,8 @@
 //! Regions have their own coordinate system: (0, 0) is the top-left corner of the *region*, not of
 //! the parent map. The coordinates are translated and passed to the parent map.
 
-mod region;
-pub use region::MapRegion;
+mod region_ref;
+pub use region_ref::MapRegion;
 mod region_mut;
 pub use region_mut::MapRegionMut;
 
