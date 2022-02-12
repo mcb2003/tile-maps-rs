@@ -1,7 +1,8 @@
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 
-use crate::{Map, row::MapRows};
+use super::Region;
+use crate::{row::MapRows, Map};
 
 pub struct MapRegion<'a, T, M: Map<Tile = T>> {
     map: &'a M,
@@ -26,25 +27,21 @@ impl<'a, T, M: Map<Tile = T>> MapRegion<'a, T, M> {
             None
         }
     }
+}
 
-    pub fn map(&self) -> &M {
+impl<'a, T, M: Map<Tile = T>> Region for MapRegion<'a, T, M> {
+    type Parent = M;
+
+    fn map(&self) -> &Self::Parent {
         self.map
     }
 
-    pub fn top(&self) -> usize {
+    fn top(&self) -> usize {
         self.top
     }
 
-    pub fn left(&self) -> usize {
+    fn left(&self) -> usize {
         self.left
-    }
-
-    pub fn bottom(&self) -> usize {
-        self.top + self.height
-    }
-
-    pub fn right(&self) -> usize {
-        self.left + self.width
     }
 }
 

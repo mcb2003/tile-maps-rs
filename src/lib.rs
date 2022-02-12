@@ -157,5 +157,9 @@ pub trait MapMut: Map {
 
 /// Commonly used types and traits
 pub mod prelude {
-    pub use super::{Map, MapMut, row::{MapRows, MapRowsMut}};
+    pub use super::{
+        row::{MapRows, MapRowsMut},
+        region::Region,
+        Map, MapMut,
+    };
 }
