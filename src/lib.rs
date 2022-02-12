@@ -5,8 +5,8 @@
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-pub mod row;
 pub mod region;
+pub mod row;
 pub use region::{MapRegion, MapRegionMut};
 
 /// An abstraction over a 2D array of tiles.
