@@ -10,7 +10,10 @@
 //! * [ ] Maps stored as a graph, for easier path-finding
 //! * [ ] Maps that store tiles in column-major order
 //! * [ ] Maps composed of chunks
-//! * [ ] Implement [`Index`][core::ops::Index] and [`IndexMut`][core::ops::IndexMut] for map types.
+//! * [ ] Implement [`Index`][core::ops::Index] and [`IndexMut`][core::ops::IndexMut] for map types
+//! * [ ] `MapCursor` for representing a cursor, or a player, on a tile of a map
+//! * [ ] A MapViewport that you can use, along with your screen dimensions, to make it easy to
+//! draw the visible section of a map
 //! ## Questions
 //! * When borrowing a region of a region, should we borrow from the root, parent map, or from the
 //! first region?

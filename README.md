@@ -17,6 +17,9 @@ Helpers for working with 2D maps of tiles common in games.
 -   [ ] Maps that store tiles in column-major order
 -   [ ] Maps composed of chunks
 -   [ ] Implement `Index` and `IndexMut` for map types.
+-   [ ] `MapCursor` for representing a cursor, or a player, on a tile of a map
+-   [ ] A MapViewport that you can use, along with your screen dimensions, to make it easy to draw the visible section
+    of a map
 
 ## Questions
 
