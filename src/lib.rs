@@ -1,6 +1,7 @@
 //! Helpers for working with 2D maps of tiles common in games.
 
 #![no_std]
+#![warn(missing_docs)]
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
@@ -158,8 +159,8 @@ pub trait MapMut: Map {
 /// Commonly used types and traits
 pub mod prelude {
     pub use super::{
-        row::{MapRows, MapRowsMut},
         region::Region,
+        row::{MapRows, MapRowsMut},
         Map, MapMut,
     };
 }

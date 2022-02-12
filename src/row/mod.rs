@@ -1,3 +1,8 @@
+//! Maps stored as contiguous rows.
+//!
+//! If your maps are a fixed size, or they are primarily resized by adding or removing rows, these
+//! [`Map`] implementations offer the best performance.
+
 mod static_map;
 pub use static_map::StaticMap;
 #[cfg(feature = "alloc")]

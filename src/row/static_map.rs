@@ -1,9 +1,15 @@
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 
-use crate::{Map, MapMut};
 use super::{MapRows, MapRowsMut};
+use crate::{Map, MapMut};
 
+/// A [`Map`] that can not be resized.
+///
+/// If you know your maps always have constant, fixed dimensions, this map type stores its tiles
+/// inline in fixed-size arrays. So if you create a bare `StaticMap`, they will be stored on the
+/// stack. If your maps are large, you may want to use a `Box<StaticMap>`, or a
+/// [`DynamicMap`][super::DynamicMap], so the tile data is heap allocated.
 #[derive(Clone)]
 pub struct StaticMap<T, const WIDTH: usize, const HEIGHT: usize> {
     tiles: [[T; WIDTH]; HEIGHT],
@@ -22,19 +28,18 @@ where
 
 impl<T, const WIDTH: usize, const HEIGHT: usize> StaticMap<T, WIDTH, HEIGHT>
 where
-    T: Copy + Default,
+    T: Default,
 {
+    /// Create a new `StaticMap`. Each tile will be initialised to the default tile.
+    /// # Example
+    /// ```
+    /// # use tiles::{row::StaticMap, prelude::*};
+    /// let map = StaticMap::<i32, 5, 4>::new();
+    /// assert_eq!(map.width(), 5);
+    /// assert_eq!(map.height(), 4);
+    /// ```
     pub fn new() -> Self {
         Self::default()
-    }
-
-    pub fn default_copy() -> Self
-    where
-        T: Copy,
-    {
-        Self {
-            tiles: [[T::default(); WIDTH]; HEIGHT],
-        }
     }
 }
 

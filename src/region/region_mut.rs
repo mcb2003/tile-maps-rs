@@ -7,6 +7,7 @@ use crate::{
     Map, MapMut,
 };
 
+/// A mutable reference to a rectangular region of a [`Map`].
 pub struct MapRegionMut<'a, T, M: Map<Tile = T>> {
     map: &'a mut M,
     top: usize,
@@ -16,6 +17,24 @@ pub struct MapRegionMut<'a, T, M: Map<Tile = T>> {
 }
 
 impl<'a, T, M: Map<Tile = T>> MapRegionMut<'a, T, M> {
+    /// Create a new `MapRegionMut` from a parent map.
+    ///
+    /// Returns [`None`] if any of the coordinates are out of bounds.
+    /// # Example
+    /// ```
+    /// use tiles::{row::DynamicMap, region::MapRegionMut, prelude::*};
+    ///
+    /// let mut map = DynamicMap::<i32>::new(10, 10);
+    /// let mut region = MapRegionMut::new(&mut map, 1, 2, 4, 3).expect("Coordinates out of bounds");
+    ///
+    /// assert_eq!(region.left(), 1);
+    /// assert_eq!(region.top(), 2);
+    /// assert_eq!(region.right(), 1 + 4);
+    /// assert_eq!(region.bottom(), 2 + 3);
+    ///
+    /// // Coordinates are out of bounds
+    /// assert!(MapRegionMut::new(&mut map, 10, 10, 3, 3).is_none());
+    /// ```
     pub fn new(map: &'a mut M, x: usize, y: usize, width: usize, height: usize) -> Option<Self> {
         // Bounds are exclusive
         if map.in_bounds(x + width - 1, y + height - 1) {
@@ -31,6 +50,9 @@ impl<'a, T, M: Map<Tile = T>> MapRegionMut<'a, T, M> {
         }
     }
 
+    /// Get a mutable reference to the parent map.
+    ///
+    /// It may be more ergonomic to use [`MapMut::region_mut()`] instead.
     pub fn map_mut(&mut self) -> &mut M {
         self.map
     }

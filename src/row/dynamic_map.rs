@@ -1,9 +1,12 @@
 #[cfg(feature = "alloc")]
-use alloc::{boxed::Box, vec, vec::Vec};
+use alloc::{boxed::Box, vec::Vec};
 
-use crate::{Map, MapMut};
 use super::{MapRows, MapRowsMut};
+use crate::{Map, MapMut};
 
+/// A [`Map`] that heap allocates its tiles.
+///
+/// For very small maps, you may prefer a [`StaticMap`][super::StaticMap].
 #[derive(Clone)]
 pub struct DynamicMap<T> {
     tiles: Vec<T>,
@@ -11,6 +14,14 @@ pub struct DynamicMap<T> {
 }
 
 impl<T> DynamicMap<T> {
+    /// Create a new `DynamicMap`. Each tile will be initialised to the default tile.
+    /// # Example
+    /// ```
+    /// # use tiles::{row::DynamicMap, prelude::*};
+    /// let map = DynamicMap::<i32>::new(5, 4);
+    /// assert_eq!(map.width(), 5);
+    /// assert_eq!(map.height(), 4);
+    /// ```
     pub fn new(width: usize, height: usize) -> Self
     where
         T: Default,
@@ -19,16 +30,6 @@ impl<T> DynamicMap<T> {
             tiles: core::iter::repeat_with(|| T::default())
                 .take(width * height)
                 .collect(),
-            width,
-        }
-    }
-
-    pub fn default_copy(width: usize, height: usize) -> Self
-    where
-        T: Copy + Default,
-    {
-        Self {
-            tiles: vec![T::default(); width * height],
             width,
         }
     }
